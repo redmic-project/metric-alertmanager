@@ -1,0 +1,12 @@
+version: '3.5'
+
+services:
+  alertmanager:
+    deploy:
+      placement:
+        constraints:
+          - node.hostname == ${PLACEMENT_CONSTRAINTS_NODE_HOSTNAME:-hostname}
+
+volumes:
+  alertmanager-vol:
+    name: ${ALERTMANAGER_VOL_NAME}

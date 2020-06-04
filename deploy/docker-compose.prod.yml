@@ -1,0 +1,8 @@
+version: '3.5'
+
+volumes:
+  alertmanager-vol:
+    name: ${ALERTMANAGER_VOL_NAME}
+    driver: 'cloudstor:aws'
+    driver_opts:
+      backing: shared
