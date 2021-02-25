@@ -1,12 +1,10 @@
 version: '3.5'
 
-services:
-  alertmanager:
-    deploy:
-      placement:
-        constraints:
-          - node.hostname == ${PLACEMENT_CONSTRAINTS_NODE_HOSTNAME:-hostname}
-
 volumes:
   alertmanager-vol:
     name: ${ALERTMANAGER_VOL_NAME}
+    driver: local
+    driver_opts:
+      type: ${VOL_TYPE:-nfs4}
+      o: addr=${VOL_ADDR:-127.0.0.1},${VOL_OPTIONS:-rw,nolock,noatime,tcp,rsize=8192,wsize=8192,timeo=14}
+      device: ${ALERTMANAGER_VOL_DEVICE:-:/alertmanager-vol/}
