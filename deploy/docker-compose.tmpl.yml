@@ -7,7 +7,7 @@ services:
     command:
       - --config.file=${CONFIG_PATH}/alertmanager.yml
       - --storage.path=${DATA_PATH}
-      - --web.external-url=${TRAEFIK_SUBDOMAIN}.${PUBLIC_HOSTNAME}
+      - --web.external-url=https://${TRAEFIK_SUBDOMAIN}.${PUBLIC_HOSTNAME}
     environment:
       SLACK_URL:
       SLACK_CHANNEL:
