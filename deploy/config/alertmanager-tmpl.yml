@@ -15,6 +15,6 @@ receivers:
   - name: 'telegram'
     telegram_configs:
       - bot_token: '${TELEGRAM_BOT_TOKEN}'
-        chat_id: '${TELEGRAM_CHAT_ID}'
+        chat_id: ${TELEGRAM_CHAT_ID}
         message: '{{ template "telegram.default.message" .}}'
-        disable_notifications: '${TELEGRAM_DISABLE_NOTIFICATIONS}'
+        disable_notifications: ${TELEGRAM_DISABLE_NOTIFICATIONS}
