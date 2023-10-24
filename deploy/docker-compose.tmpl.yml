@@ -13,10 +13,8 @@ services:
       SLACK_URL:
       SLACK_CHANNEL:
       SLACK_USER:
-      SLACK_TEXT_TEMPLATE:
       TELEGRAM_BOT_TOKEN:
       TELEGRAM_CHAT_ID:
-      TELEGRAM_MESSAGE_TEMPLATE:
       TELEGRAM_DISABLE_NOTIFICATIONS:
     networks:
       metric-net:

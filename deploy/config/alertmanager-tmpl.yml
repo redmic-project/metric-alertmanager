@@ -8,7 +8,7 @@ receivers:
   - name: 'slack'
     slack_configs:
       - send_resolved: true
-        text: '${SLACK_TEXT_TEMPLATE}'
+        text: '{{ .CommonAnnotations.description }}'
         username: '${SLACK_USER}'
         channel: '${SLACK_CHANNEL}'
         api_url: '${SLACK_URL}'
@@ -16,5 +16,5 @@ receivers:
     telegram_configs:
       - bot_token: '${TELEGRAM_BOT_TOKEN}'
         chat_id: '${TELEGRAM_CHAT_ID}'
-        message: '${TELEGRAM_MESSAGE_TEMPLATE}'
+        message: '{{ template "telegram.default.message" .}}'
         disable_notifications: '${TELEGRAM_DISABLE_NOTIFICATIONS}'
