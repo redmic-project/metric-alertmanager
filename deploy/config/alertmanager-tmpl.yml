@@ -1,11 +1,20 @@
 route:
-  receiver: 'slack'
+  continue: true
+  routes:
+    - receiver: 'slack'
+    - receiver: 'telegram'
 
 receivers:
   - name: 'slack'
     slack_configs:
       - send_resolved: true
-        text: "{{ .CommonAnnotations.description }}"
+        text: '${SLACK_TEXT_TEMPLATE}'
         username: '${SLACK_USER}'
         channel: '${SLACK_CHANNEL}'
         api_url: '${SLACK_URL}'
+  - name: 'telegram'
+    telegram_configs:
+      - bot_token: '${TELEGRAM_BOT_TOKEN}'
+        chat_id: '${TELEGRAM_CHAT_ID}'
+        message: '${TELEGRAM_MESSAGE_TEMPLATE}'
+        disable_notifications: '${TELEGRAM_DISABLE_NOTIFICATIONS}'

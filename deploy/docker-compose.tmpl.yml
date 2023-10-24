@@ -1,4 +1,4 @@
-version: '3.5'
+version: '3.9'
 
 services:
   alertmanager:
@@ -9,10 +9,15 @@ services:
       - --storage.path=${DATA_PATH}
       - --web.external-url=https://${TRAEFIK_SUBDOMAIN}.${PUBLIC_HOSTNAME}
     environment:
+      CONFIG_PATH:
       SLACK_URL:
       SLACK_CHANNEL:
       SLACK_USER:
-      CONFIG_PATH:
+      SLACK_TEXT_TEMPLATE:
+      TELEGRAM_BOT_TOKEN:
+      TELEGRAM_CHAT_ID:
+      TELEGRAM_MESSAGE_TEMPLATE:
+      TELEGRAM_DISABLE_NOTIFICATIONS:
     networks:
       metric-net:
       traefik-net:
@@ -32,10 +37,12 @@ services:
       update_config:
         delay: ${UPDATE_DELAY:-1m}
       labels:
-        traefik.frontend.auth.basic.users: ${UI_AUTH}
-        traefik.frontend.rule: Host:${TRAEFIK_SUBDOMAIN}.${PUBLIC_HOSTNAME}
-        traefik.backend: alertmanager
-        traefik.port: '${PORT:-9093}'
+        traefik.enable: ${TRAEFIK_ENABLE:-true}
+        traefik.http.routers.alertmanager.entrypoints: ${TRAEFIK_ENTRYPOINT:-http}
+        traefik.http.routers.alertmanager.rule: Host(`${TRAEFIK_SUBDOMAIN}.${PUBLIC_HOSTNAME}`)
+        traefik.http.middlewares.alertmanager-auth.basicauth.users: ${TRAEFIK_AUTH}
+        traefik.http.routers.alertmanager.middlewares: alertmanager-auth
+        traefik.http.services.alertmanager.loadbalancer.server.port: ${PORT:-9093}
       resources:
         limits:
           cpus: '${RESOURCES_LIMITS_CPUS:-0.1}'

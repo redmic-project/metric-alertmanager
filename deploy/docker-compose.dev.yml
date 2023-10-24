@@ -1,4 +1,4 @@
-version: '3.5'
+version: '3.9'
 
 volumes:
   alertmanager-vol:
@@ -6,5 +6,5 @@ volumes:
     driver: local
     driver_opts:
       type: ${VOL_TYPE:-nfs4}
-      o: addr=${VOL_ADDR:-127.0.0.1},${VOL_OPTIONS:-rw,nolock,noatime,tcp,rsize=8192,wsize=8192,timeo=14}
+      o: addr=${VOL_ADDR:-127.0.0.1},${VOL_OPTS:-rw,nolock,noatime,tcp,rsize=8192,wsize=8192,timeo=14}
       device: ${ALERTMANAGER_VOL_DEVICE:-:/alertmanager-vol/}
