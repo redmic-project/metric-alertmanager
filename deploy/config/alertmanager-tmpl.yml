@@ -1,8 +1,10 @@
 route:
-  continue: true
+  receiver: 'slack'
   routes:
     - receiver: 'slack'
+      continue: true
     - receiver: 'telegram'
+      continue: true
 
 receivers:
   - name: 'slack'
@@ -16,5 +18,5 @@ receivers:
     telegram_configs:
       - bot_token: '${TELEGRAM_BOT_TOKEN}'
         chat_id: ${TELEGRAM_CHAT_ID}
-        message: '{{ template "telegram.default.message" .}}'
+        message: '{{ .CommonAnnotations.description }}'
         disable_notifications: ${TELEGRAM_DISABLE_NOTIFICATIONS}
