@@ -1,5 +1,3 @@
-version: '3.9'
-
 volumes:
   alertmanager-vol:
     name: ${ALERTMANAGER_VOL_NAME}
