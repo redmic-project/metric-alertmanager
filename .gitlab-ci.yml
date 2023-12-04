@@ -1,7 +1,7 @@
 include:
   - project: 'redmic-project/gitlab-ci-templates'
     ref: master
-    file: '/service-deployment/docker-deploy.yml'
+    file: '/deployment-service/docker-deploy.yml'
 
 stages:
   - deploy
