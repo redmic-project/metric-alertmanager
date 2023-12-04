@@ -8,6 +8,7 @@ route:
 
 receivers:
   - name: 'slack'
+    continue: true
     slack_configs:
       - send_resolved: true
         text: '{{ .CommonAnnotations.description }}'
@@ -15,6 +16,7 @@ receivers:
         channel: '${SLACK_CHANNEL}'
         api_url: '${SLACK_URL}'
   - name: 'telegram'
+    continue: true
     telegram_configs:
       - bot_token: '${TELEGRAM_BOT_TOKEN}'
         chat_id: ${TELEGRAM_CHAT_ID}
