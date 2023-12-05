@@ -16,7 +16,10 @@ receivers:
         api_url: '${SLACK_URL}'
   - name: 'telegram'
     telegram_configs:
-      - bot_token: '${TELEGRAM_BOT_TOKEN}'
+      - send_resolved: true
+        api_url: https://api.telegram.org
+        bot_token: '${TELEGRAM_BOT_TOKEN}'
         chat_id: ${TELEGRAM_CHAT_ID}
-        message: '{{ .CommonAnnotations.description }}'
+        message: '{{ template "telegram.default.message" .}}'
+        parse_mode: '${TELEGRAM_PARSE_MODE}'
         disable_notifications: ${TELEGRAM_DISABLE_NOTIFICATIONS}
