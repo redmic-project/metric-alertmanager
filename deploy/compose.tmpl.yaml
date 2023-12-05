@@ -26,6 +26,13 @@ services:
         mode: 0555
       - source: alertmanager-config
         target: ${CONFIG_PATH}/alertmanager-tmpl.yml
+    healthcheck:
+      test: wget --spider -q http://localhost:${PORT}/-/healthy
+      interval: ${HEALTHCHECK_INTERVAL:-1m}
+      timeout: ${HEALTHCHECK_TIMEOUT:-15s}
+      retries: ${HEALTHCHECK_RETRIES:-10}
+      start_period: ${HEALTHCHECK_START_PERIOD:-1m}
+      disable: ${HEALTHCHECK_DISABLE:-false}
     deploy:
       mode: replicated
       replicas: ${REPLICAS:-1}
@@ -39,7 +46,7 @@ services:
         traefik.http.routers.alertmanager.rule: Host(`${TRAEFIK_SUBDOMAIN}.${PUBLIC_HOSTNAME}`)
         traefik.http.middlewares.alertmanager-auth.basicauth.users: ${TRAEFIK_AUTH}
         traefik.http.routers.alertmanager.middlewares: alertmanager-auth
-        traefik.http.services.alertmanager.loadbalancer.server.port: ${PORT:-9093}
+        traefik.http.services.alertmanager.loadbalancer.server.port: ${PORT}
       resources:
         limits:
           cpus: '${RESOURCES_LIMITS_CPUS:-0.1}'
