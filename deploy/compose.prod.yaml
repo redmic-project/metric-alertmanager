@@ -1,6 +1,6 @@
 volumes:
-  alertmanager-vol:
-    name: ${ALERTMANAGER_VOL_NAME}
-    driver: 'cloudstor:aws'
+  data-vol:
+    name: ${DATA_VOL_NAME}
+    driver: ${PRO_VOL_DRIVER}
     driver_opts:
-      backing: shared
+      backing: ${VOL_BACKING}

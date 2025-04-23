@@ -19,7 +19,7 @@ services:
       metric-net:
       traefik-net:
     volumes:
-      - alertmanager-vol:${DATA_PATH}
+      - data-vol:${DATA_PATH}
     configs:
       - source: entrypoint-config
         target: ${CONFIG_PATH}/entrypoint.sh
