@@ -27,7 +27,7 @@ services:
       - source: alertmanager-config
         target: ${CONFIG_PATH}/alertmanager-tmpl.yml
     healthcheck:
-      test: wget --spider -q http://localhost:${PORT}/-/healthy
+      test: wget --spider -q http://127.0.0.1:${PORT}/-/healthy
       interval: ${HEALTHCHECK_INTERVAL:-1m}
       timeout: ${HEALTHCHECK_TIMEOUT:-15s}
       retries: ${HEALTHCHECK_RETRIES:-10}
