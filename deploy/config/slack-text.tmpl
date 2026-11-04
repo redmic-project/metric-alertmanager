@@ -1,0 +1,15 @@
+{{ define "slack-text-tmpl" }}
+{{ range $index, $alert := .Alerts }}
+  {{- "\n" -}}
+  {{- if eq $alert.Status "firing" }}:red_circle:{{ else }}:white_circle:{{ end -}}
+  {{- " " }}#{{ $index }} `{{ $alert.Labels.alertname }}` | `{{ $alert.Labels.severity }}`
+  {{- range $alert.Annotations.SortedPairs }}
+    • _{{ .Name }}_ = *{{ .Value }}*
+  {{- end -}}
+  {{- with $alert.Labels.Remove (stringSlice "alertname" "severity") -}}
+  {{- range .SortedPairs }}
+    • _{{ .Name }}_ = `{{ .Value }}`
+  {{- end }}
+  {{- end }}
+{{ end }}
+{{ end }}

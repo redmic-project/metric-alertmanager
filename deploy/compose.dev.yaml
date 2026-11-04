@@ -1,8 +1,7 @@
 volumes:
-  data-vol:
-    name: ${DATA_VOL_NAME}
-    driver: ${DEV_VOL_DRIVER}
+  alertmanager-vol:
+    driver: ${VOL_DRIVER:-local}
     driver_opts:
       type: ${VOL_TYPE}
       o: addr=${VOL_ADDR},vers=${VOL_VERS},${VOL_OPTS}
-      device: :${VOL_DEVICE_PREFIX}${DATA_VOL_DEVICE}
+      device: :${VOL_DEVICE_PREFIX}${ALERTMANAGER_VOL_DEVICE:-/alertmanager-vol/}
