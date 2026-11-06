@@ -2,15 +2,18 @@ services:
   alertmanager:
     image: ${IMAGE_NAME:-prom/alertmanager}:${IMAGE_TAG:-latest}
     entrypoint: ${CONFIG_PATH}/entrypoint.sh
-    command:
-      - --config.file=${CONFIG_PATH}/alertmanager.yml
-      - --storage.path=${DATA_PATH}
-      - --web.external-url=https://${TRAEFIK_SUBDOMAIN}.${PUBLIC_HOSTNAME}
+    command: >
+      --web.listen-address=:${PORT}
+      --web.external-url=https://${TRAEFIK_SUBDOMAIN}.${PUBLIC_HOSTNAME}
+      --log.level=${LOG_LEVEL:-info}
+      --config.file=${CONFIG_PATH}/alertmanager.yml
+      --storage.path=${DATA_PATH}
     environment:
       CONFIG_PATH:
       SLACK_URL:
       SLACK_CHANNEL:
-      SLACK_USER:
+      SLACK_TOKEN:
+      TELEGRAM_URL:
       TELEGRAM_BOT_TOKEN:
       TELEGRAM_CHAT_ID:
       TELEGRAM_PARSE_MODE:
@@ -19,13 +22,19 @@ services:
       metric-net:
       traefik-net:
     volumes:
-      - data-vol:${DATA_PATH}
+      - alertmanager-vol:${DATA_PATH}
     configs:
-      - source: entrypoint-config
+      - source: alertmanager-entrypoint
         target: ${CONFIG_PATH}/entrypoint.sh
         mode: 0555
       - source: alertmanager-config
         target: ${CONFIG_PATH}/alertmanager-tmpl.yml
+      - source: alertmanager-slack-title-tmpl
+        target: ${CONFIG_PATH}/slack-title.tmpl
+      - source: alertmanager-slack-text-tmpl
+        target: ${CONFIG_PATH}/slack-text.tmpl
+      - source: alertmanager-telegram-message-tmpl
+        target: ${CONFIG_PATH}/telegram-message.tmpl
     healthcheck:
       test: wget --spider -q http://127.0.0.1:${PORT}/-/healthy
       interval: ${HEALTHCHECK_INTERVAL:-1m}
@@ -34,11 +43,9 @@ services:
       start_period: ${HEALTHCHECK_START_PERIOD:-1m}
     deploy:
       mode: replicated
-      replicas: ${REPLICAS:-1}
+      replicas: 1
       restart_policy:
         delay: ${RESTART_DELAY:-10s}
-      update_config:
-        delay: ${UPDATE_DELAY:-1m}
       labels:
         traefik.enable: ${TRAEFIK_ENABLE:-true}
         traefik.http.routers.alertmanager.entrypoints: ${TRAEFIK_ENTRYPOINT:-http}
@@ -57,19 +64,24 @@ services:
 networks:
   metric-net:
     name: ${METRIC_NET_NAME:-metric-net}
-    driver: ${METRIC_NET_DRIVER:-overlay}
     external: true
 
   traefik-net:
     name: ${TRAEFIK_NET_NAME:-traefik-net}
-    driver: ${TRAEFIK_NET_DRIVER:-overlay}
     external: true
 
 configs:
-  entrypoint-config:
-    name: ${ENTRYPOINT_CONFIG_NAME:-alertmanager-entrypoint}
+  alertmanager-entrypoint:
     file: ./config/entrypoint.sh
 
   alertmanager-config:
-    name: ${ALERTMANAGER_CONFIG_NAME:-alertmanager-config}
     file: ./config/alertmanager-tmpl.yml
+
+  alertmanager-slack-title-tmpl:
+    file: ./config/slack-title.tmpl
+
+  alertmanager-slack-text-tmpl:
+    file: ./config/slack-text.tmpl
+
+  alertmanager-telegram-message-tmpl:
+    file: ./config/telegram-message.tmpl

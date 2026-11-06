@@ -1,3 +1,7 @@
+global:
+  slack_api_url: '${SLACK_URL}'
+  telegram_api_url: '${TELEGRAM_URL}'
+
 route:
   receiver: 'slack'
   routes:
@@ -10,16 +14,23 @@ receivers:
   - name: 'slack'
     slack_configs:
       - send_resolved: true
-        text: '{{ .CommonAnnotations.description }}'
-        username: '${SLACK_USER}'
         channel: '${SLACK_CHANNEL}'
-        api_url: '${SLACK_URL}'
+        http_config:
+          authorization:
+            credentials: '${SLACK_TOKEN}'
+        title: '{{ template "slack-title-tmpl" . }}'
+        text: '{{ template "slack-text-tmpl" . }}'
+
   - name: 'telegram'
     telegram_configs:
       - send_resolved: true
-        api_url: https://api.telegram.org
         bot_token: '${TELEGRAM_BOT_TOKEN}'
         chat_id: ${TELEGRAM_CHAT_ID}
-        message: '{{ template "telegram.default.message" .}}'
+        message: '{{ template "telegram-message-tmpl" . }}'
         parse_mode: '${TELEGRAM_PARSE_MODE}'
         disable_notifications: ${TELEGRAM_DISABLE_NOTIFICATIONS}
+
+templates:
+  - './slack-title.tmpl'
+  - './slack-text.tmpl'
+  - './telegram-message.tmpl'

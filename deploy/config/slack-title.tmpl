@@ -1,0 +1,14 @@
+{{ define "slack-title-tmpl" }}
+{{ if eq .Status "firing" -}}🔥{{ else }}✅{{ end -}}
+{{ " " }}{{ .Status | toUpper }}:{{ " " }}
+{{- if eq .Status "firing" -}}
+  {{ .Alerts.Firing | len }}
+{{- else -}}
+  {{ .Alerts.Resolved | len }}
+{{- end }}
+{{- if gt (len .CommonLabels) (len .GroupLabels) -}}
+  {{- with .CommonLabels.Remove .GroupLabels.Names }}
+    {{- range .SortedPairs }} | {{ .Value }}{{ end -}}
+  {{ end -}}
+{{ end }}
+{{ end }}
